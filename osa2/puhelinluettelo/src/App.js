@@ -55,10 +55,10 @@ const ListItem = (props) => {
         .then(response => {
           console.log(response)
           props.updater();
-          props.deleter(`${props.person.name} deleted successfully`,false);
+          props.deleter(`${props.person.name} deleted successfully`, false);
         })
         .catch(error => {
-          props.deleter(`${props.person.name} was already deleted from the server`,true);
+          props.deleter(`${props.person.name} was already deleted from the server`, true);
         })
     }
   }
@@ -79,7 +79,7 @@ const PersonsList = (props) => {
 
       <h2>Numbers</h2>
       {props.persons.filter(person => person.name.toLowerCase().includes(props.filter.toLowerCase())).map((person) =>
-        <ListItem person={person} key={person.id} updater={props.updater} deleter={props.deleter}/>
+        <ListItem person={person} key={person.id} updater={props.updater} deleter={props.deleter} />
       )}
     </div>
 
@@ -136,6 +136,7 @@ const App = () => {
           personService
             .update(personUpdated.id, newPerson)
             .then(response => {
+              console.log("Haloo")
               console.log(response)
               hook();
               setErrorMessage(
@@ -145,6 +146,7 @@ const App = () => {
                 setErrorMessage(null)
               }, 5000)
             })
+
         }
 
       } else {
@@ -162,6 +164,18 @@ const App = () => {
               setErrorMessage(null)
             }, 5000)
           })
+          .catch(error => {
+
+            console.log(error.response.data)
+            const mes = error.response.data.error
+            setErrorMessage(`${mes}`)
+            setMsgClr('red')
+            setTimeout(() => {
+              setErrorMessage(null)
+              setMsgClr('green')
+            }, 5000)
+
+          })
       }
 
     } else {
@@ -170,7 +184,7 @@ const App = () => {
   }
 
   const deleteAlert = (message, isError) => {
-    if(isError) {
+    if (isError) {
       console.log("Haloo")
       setMsgClr('red')
       console.log(msgClr);
@@ -200,7 +214,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      
+
       <Notification message={errorMessage} style={notiStyle} />
       <Filter handleFilter={handleFilter} />
       <Person handleName={handleName} handleNumber={handleNumber} addNote={addNote} />
