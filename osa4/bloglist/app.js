@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken')
 
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
+  console.log(authorization + 'haloo')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
       return authorization.substring(7)
   }
@@ -22,7 +23,7 @@ const getTokenFrom = request => {
 const tokenExtractor = (request, response, next) => {
   // tokenin ekstraktoiva koodi
 
-    if(request.url === '/api/blogs') {
+     if(request.url === '/api/users') {
       const token = getTokenFrom(request)
       const decodedToken = jwt.verify(token, process.env.SECRET)
       if (!token || !decodedToken.id) {
@@ -30,7 +31,7 @@ const tokenExtractor = (request, response, next) => {
       } else {
           request.token = token
       }
-    }
+    } 
     
 
   next()
@@ -46,7 +47,7 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
     console.log('error connection to MongoDB:', error.message)
   })
 
-app.use(cors())
+app.use(cors({credentials: true, origin: true}))
 app.use(express.static('build'))
 app.use(express.json())
 app.use('/api/users', usersRouter)

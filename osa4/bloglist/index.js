@@ -6,7 +6,7 @@ const express = require('express')
 const app = require('./app')
 const cors = require('cors')
 
-
+app.use(cors())
 const server = http.createServer(app)
 
 
